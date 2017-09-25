@@ -15,7 +15,7 @@ public class StudentNode {
 
     private final Student student;
     private StudentNode next;
-    
+
     public StudentNode(Student student) {
         this.student = student;
         this.next = null;
@@ -32,7 +32,5 @@ public class StudentNode {
     public void setNext(StudentNode next) {
         this.next = next;
     }
-    
-    
-    
+
 }

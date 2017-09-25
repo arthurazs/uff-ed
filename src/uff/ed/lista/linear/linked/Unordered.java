@@ -51,24 +51,23 @@ public class Unordered implements StudentCollection {
     public Student remove(int cpf) {
 
         Student removed = null;
-        if (head != null) {
+        if (head != null)
             if (head.getStudent().getCpf() == cpf)
                 removed = head.getStudent();
             else
                 removed = removeNext(head, cpf);
-        }
 
         if (removed != null)
             size--;
-        
+
         return removed;
     }
-    
-    private Student removeNext(StudentNode currentNode, int cpf){
+
+    private Student removeNext(StudentNode currentNode, int cpf) {
         StudentNode nextNode = currentNode.getNext();
         StudentNode foundNode;
 
-        if (nextNode != null) {
+        if (nextNode != null)
             if (nextNode.getStudent().getCpf() == cpf) {
                 foundNode = nextNode;
                 currentNode.setNext(foundNode.getNext());
@@ -76,7 +75,6 @@ public class Unordered implements StudentCollection {
             }
             else
                 return removeNext(nextNode, cpf);
-        }
         return null;
     }
 

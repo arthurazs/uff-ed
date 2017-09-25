@@ -14,9 +14,13 @@ import uff.ed.Student;
 public interface StudentCollection {
 
     public boolean insert(Student student);
+
     public Student search(int cpf);
+
     public Student remove(int cpf);
+
     public void print();
+
     public int size();
-    
+
 }

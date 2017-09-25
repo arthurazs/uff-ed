@@ -35,9 +35,8 @@ public class Unordered implements StudentCollection {
     public Student search(int cpf) {
         for (int i = 0; i < size; i++) {
             Student student = lista[i];
-            if (student.getCpf() == cpf) {
+            if (student.getCpf() == cpf)
                 return student;
-            }
         }
         return null;
     }
@@ -46,8 +45,8 @@ public class Unordered implements StudentCollection {
     public Student remove(int cpf) {
         for (int i = 0; i < size; i++) {
             Student student = lista[i];
-            if(student.getCpf()==cpf){
-                lista[i] = lista[size-1];
+            if (student.getCpf() == cpf) {
+                lista[i] = lista[size - 1];
                 size--;
                 return student;
             }

@@ -26,7 +26,7 @@ public class Main {
      */
     public static void main(String[] args) {
 
-        int pick = 2;
+        int pick = 3;
 //        do {
 //            pick = Integer.parseInt(JOptionPane.showInputDialog(
 //                "Pick one:\n\n" +
@@ -46,6 +46,8 @@ public class Main {
                 lista = new uff.ed.lista.linear.array.Unordered(4);
                 System.out.println("Inserting students (4 true / 1 false)");
                 break;
+            case 3:
+                throw new UnsupportedOperationException("not implemented yet");
             default:
                 throw new IndexOutOfBoundsException("Variable 'pick' should be = 0 < Integer < 3");
         }
@@ -56,9 +58,9 @@ public class Main {
         System.out.println(lista.insert(student1));
         System.out.println(lista.insert(student3));
         System.out.println(lista.insert(student5));
-        
+
         System.out.println("> SIZE " + lista.size());
-        
+
         lista.print();
         System.out.println("> SIZE " + lista.size());
 
@@ -89,12 +91,12 @@ public class Main {
 
         lista.print();
         System.out.println("> SIZE " + lista.size());
-        
+
         System.out.println("\n> SIZE " + lista.size());
         System.out.println("Inserting one last element  (1 true)");
         System.out.println(lista.insert(student6));
         System.out.println("> SIZE " + lista.size());
-        
+
         lista.print();
         System.out.println("> SIZE " + lista.size());
     }
