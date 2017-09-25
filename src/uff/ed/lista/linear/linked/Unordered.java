@@ -15,9 +15,11 @@ import uff.ed.lista.StudentCollection;
 public class Unordered implements StudentCollection {
 
     private StudentNode head;
+    private int size;
 
     public Unordered() {
         head = null;
+        size = 0;
     }
 
     @Override
@@ -25,6 +27,7 @@ public class Unordered implements StudentCollection {
         StudentNode node = new StudentNode(student);
         node.setNext(head);
         head = node;
+        size++;
         return true;
     }
 
@@ -47,14 +50,18 @@ public class Unordered implements StudentCollection {
     @Override
     public Student remove(int cpf) {
 
+        Student removed = null;
         if (head != null) {
             if (head.getStudent().getCpf() == cpf)
-                return head.getStudent();
+                removed = head.getStudent();
             else
-                return removeNext(head, cpf);
+                removed = removeNext(head, cpf);
         }
 
-        return null;
+        if (removed != null)
+            size--;
+        
+        return removed;
     }
     
     private Student removeNext(StudentNode currentNode, int cpf){
@@ -81,6 +88,11 @@ public class Unordered implements StudentCollection {
             System.out.println(node.getStudent().getContent());
             node = node.getNext();
         }
+    }
+
+    @Override
+    public int size() {
+        return size;
     }
 
 }

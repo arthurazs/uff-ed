@@ -64,4 +64,9 @@ public class Unordered implements StudentCollection {
         }
     }
 
+    @Override
+    public int size() {
+        return size;
+    }
+
 }

@@ -50,41 +50,53 @@ public class Main {
                 throw new IndexOutOfBoundsException("Variable 'pick' should be = 0 < Integer < 3");
         }
 
+        System.out.println("> SIZE " + lista.size());
         System.out.println(lista.insert(student2));
         System.out.println(lista.insert(student4));
         System.out.println(lista.insert(student1));
         System.out.println(lista.insert(student3));
         System.out.println(lista.insert(student5));
         
+        System.out.println("> SIZE " + lista.size());
+        
         lista.print();
+        System.out.println("> SIZE " + lista.size());
 
         Student found = lista.search(student4.getCpf());
         System.out.println("\nShould find");
         if (found != null)
             System.out.println("Found student: " + found.getContent());
 
+        System.out.println("\n> SIZE " + lista.size());
         Student removed = lista.remove(student4.getCpf());
-        System.out.println("\nShould remove");
+        System.out.println("Should remove");
         if (removed == student4)
             System.out.println(removed.getContent() + " successfully removed!");
+        System.out.println("> SIZE " + lista.size());
 
+        System.out.println("\n> SIZE " + lista.size());
         int fake_cpf = removed.getCpf();
         found = lista.search(fake_cpf);
-        System.out.println("\nShould not find");
+        System.out.println("Should not find");
         if (found == null)
             System.out.println("Student with cpf " + fake_cpf + " not found!");
 
         removed = lista.remove(fake_cpf);
-        System.out.println("\nShould not remove");
+        System.out.println("Should not remove");
         if (removed == null)
             System.out.println("Student with cpf " + fake_cpf + " not found!");
+        System.out.println("> SIZE " + lista.size());
 
         lista.print();
+        System.out.println("> SIZE " + lista.size());
         
-        System.out.println("\nInserting one last element  (1 true)");
+        System.out.println("\n> SIZE " + lista.size());
+        System.out.println("Inserting one last element  (1 true)");
         System.out.println(lista.insert(student6));
+        System.out.println("> SIZE " + lista.size());
         
         lista.print();
+        System.out.println("> SIZE " + lista.size());
     }
 
 }

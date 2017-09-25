@@ -17,5 +17,6 @@ public interface StudentCollection {
     public Student search(int cpf);
     public Student remove(int cpf);
     public void print();
+    public int size();
     
 }
