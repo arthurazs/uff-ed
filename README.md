@@ -17,13 +17,13 @@
 
     # Data structures
     [List] & [Ordered | Unordered] & [insert & search & remove & sort]
-    [Stack | Queue] & [add & search & pop]
+    [Stack | Queue] & [add & pop]
     #  add = end (both)
     #  pop = end (Stack)
     #  pop = begin (Queue)
     
     # For each data structure
-    [length | is_empty | print]
+    [size | print]
     
     # SORT ONLY FOR UNORDERED ARRAY
     [selection | bubble | merge | quick]
