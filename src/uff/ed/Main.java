@@ -26,7 +26,7 @@ public class Main {
      */
     public static void main(String[] args) {
 
-        int pick = 1;
+        int pick = 2;
 //        do {
 //            pick = Integer.parseInt(JOptionPane.showInputDialog(
 //                "Pick one:\n\n" +
@@ -81,8 +81,9 @@ public class Main {
 
         lista.print();
         
-        System.out.println("\nInserting one last element");
+        System.out.println("\nInserting one last element  (1 true)");
         System.out.println(lista.insert(student6));
+        
         lista.print();
     }
 
