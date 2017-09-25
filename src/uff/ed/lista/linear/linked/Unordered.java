@@ -6,13 +6,13 @@
 package uff.ed.lista.linear.linked;
 
 import uff.ed.Student;
-import uff.ed.lista.Lista;
+import uff.ed.lista.StudentCollection;
 
 /**
  *
  * @author Arthur Zopellaro
  */
-public class Unordered implements Lista {
+public class Unordered implements StudentCollection {
 
     private StudentNode head;
 
