@@ -12,61 +12,63 @@ import java.io.FileReader;
 
 /**
  *
- * @author Arthur Zopellaro
+ * @author Arthur Zopellaro, Allysson
  */
-public class Main extends Util {
+public class Main {
 
-    private static final String DIR = "C:\\Users\\Allysson\\Documents\\NetBeansProjects\\TrabalhoED\\src\\uff\\ed\\trabalho\\";
-    private static final String FILE1 = DIR + "data_13_05.csv";
+    private static final String FILE1 = Util.filePath("data_13_05.csv");
+    // private static final String FILE2 = // criar para testes
 
     /**
-     * List includes but never deletes One insertion by day? One print by day?
+     * @param args
+     * @throws java.lang.Exception
      */
     public static void main(String[] args) throws Exception {
-        // TODO code application logic here
 
         // verificar se o arquivo existe
         File file = new File(FILE1);
-        if (file.exists()) {
-            System.out.println("Arquivo " + file.getPath() + " existe");
-        } else {
-            System.out.println("Arquivo " + file.getPath() + " nao encotrado");
+        if (!file.exists()) {
+            System.out.println("ERROR Arquivo " + file.getPath() + " nao encotrado");
+            System.exit(-1);
         }
 
         CSVReader reader = new CSVReader(new FileReader(FILE1), ',', '"', 1);
 
-        Trafego[] trafego = new Trafego[10000];
         ListaDinamica lista = new ListaDinamica();
-        int count = 0;
+        TabelaHash hash = new TabelaHash(1009); // tamanho da lista
 
         String[] line;
-        while ((line = reader.readNext()) != null) {
+        while ((line = reader.readNext()) != null)
             if (line != null) {
-//                System.out.println(Arrays.toString(line));
                 String setor = line[0];
                 String rodovia = line[1];
-                Date dia = DATEFORMAT.parse(line[2]);
+                Date dia = Util.parseData(line[2]);
                 double fluxo = Double.parseDouble(line[3]);
-//                System.out.println(line[2]);
 
                 // cria elemento do tipo trafego e adiciona no final da lista
                 Trafego elemento = new Trafego(setor, rodovia, dia, fluxo);
                 lista.adicionarNoFinal(elemento);
-
-                // adiciona elemento no vetor trafego
-                trafego[count++] = new Trafego(setor, rodovia, dia, fluxo);
+                
+                // adiciona o elemento no hash,
+                // e totaliza o fluxo nas colisões setor+dia 
+                hash.inserir(elemento);
+                /* DÚVIDA
+                essa é a correta utilização do hash?
+                fiquei na duvida se o hash é usado para
+                armazenar apenas o fluxo total
+                ou se guarda mais coisas.
+                
+                Poderia também ser feito um loop para ler
+                a lista e totalizar no hash depois de ler
+                o arquivo mas nao vejo necessidade p/ isso,
+                acho melhor já fazer ambos (add na lista e no hash)
+                aqui na leitura do arquivo
+                */
             }
-        }
 
         // imprime a lista toda
         System.out.println("Lista");
         lista.imprimirLista();
-
-        // imprime o vetor
-        System.out.println("Vetor");
-        for (int i = 0; i < count; i++) {
-            System.out.println(trafego[i].getContent());
-        }
     }
 
 }

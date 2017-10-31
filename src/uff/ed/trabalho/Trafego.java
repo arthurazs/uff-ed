@@ -5,16 +5,14 @@
  */
 package uff.ed.trabalho;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  *
  * @author Arthur Zopellaro
  */
-public class Trafego extends Util {
-    
+public class Trafego {
+
     private String setor;
     private String rodovia;
     private Date dia;
@@ -26,7 +24,7 @@ public class Trafego extends Util {
         this.dia = dia;
         this.fluxo = fluxo;
     }
-    
+
     public String getSetor() {
         return setor;
     }
@@ -44,7 +42,7 @@ public class Trafego extends Util {
     }
 
     public String getDia() {
-        return DATEFORMAT.format(dia);
+        return Util.formatData(dia);
     }
 
     public void setDia(Date dia) {
@@ -58,9 +56,9 @@ public class Trafego extends Util {
     public void setFluxo(double fluxo) {
         this.fluxo = fluxo;
     }
-    
+
     public String getContent() {
         return "[" + getSetor() + ", " + getRodovia() + ", " + getDia() + ", " + getFluxo() + "]";
     }
-    
+
 }
