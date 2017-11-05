@@ -35,10 +35,11 @@ public class Main {
         CSVReader reader = new CSVReader(new FileReader(FILE1), ',', '"', 1);
 
         ListaDinamica lista = new ListaDinamica();
+        ArvoreAVL arvore = new ArvoreAVL();
         TabelaHash hash = new TabelaHash(1009); // tamanho da lista
 
         String[] line;
-        while ((line = reader.readNext()) != null)
+        while ((line = reader.readNext()) != null) {
             if (line != null) {
                 String setor = line[0];
                 String rodovia = line[1];
@@ -48,10 +49,11 @@ public class Main {
                 // cria elemento do tipo trafego e adiciona no final da lista
                 Trafego elemento = new Trafego(setor, rodovia, dia, fluxo);
                 lista.adicionarNoFinal(elemento);
-                
+                arvore.adicionar(elemento);
+
                 // adiciona o elemento no hash,
                 // e totaliza o fluxo nas colisões setor+dia 
-                hash.inserir(elemento);
+                // ORIGINAL hash.adicionar(elemento);
                 /* DÚVIDA
                 essa é a correta utilização do hash?
                 fiquei na duvida se o hash é usado para
@@ -63,12 +65,19 @@ public class Main {
                 o arquivo mas nao vejo necessidade p/ isso,
                 acho melhor já fazer ambos (add na lista e no hash)
                 aqui na leitura do arquivo
-                */
+                 */
             }
+        }
+        
+        System.out.println(arvore.procurar(7));
 
         // imprime a lista toda
         System.out.println("Lista");
         lista.imprimirLista();
+        arvore.imprimirAVL();
+        
+        arvore.remover(7, arvore.raiz);
+        arvore.imprimirAVL();
     }
 
 }
