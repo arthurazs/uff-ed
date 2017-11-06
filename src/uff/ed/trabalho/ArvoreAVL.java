@@ -1,230 +1,278 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package uff.ed.trabalho;
 
 /**
  *
- * @author allyssoncc
+ * @author allysson
  */
+import java.util.ArrayList;
+
 public class ArvoreAVL {
 
-    NoAVL raiz;
-
-    public ArvoreAVL() {
-        raiz = null;
-    }
+    protected NoAVL raiz;
 
     public boolean estaVazio() {
         return raiz == null;
     }
 
-    public NoAVL adicionar(Trafego elemento, NoAVL atual) {
-        if (atual == null) // se não tiver nada cria raiz
-        {
-            atual = new NoAVL(elemento);
-        } else if (elemento.getFluxo() < atual.getElemento().getFluxo()) { // se novo menor que o existente
-            atual.setEsquerda(adicionar(elemento, atual.getEsquerda())); // insere recursivamente
-            if (altura(atual.getEsquerda()) - altura(atual.getDireita()) == 2) // se houver diferença igual a 2
-            {
-                if (elemento.getFluxo() < atual.getEsquerda().getElemento().getFluxo()) // se novo é menor que esquerda do atual
-                {
-                    atual = girarFilhoEsquerda(atual);  // faz giro
-                } else {
-                    atual = duploFilhoEsquerda(atual);  // faz giro
-                }
-            }
-        } else if (elemento.getFluxo() > atual.getElemento().getFluxo()) { // se novo maior que o existente
-            atual.setDireita(adicionar(elemento, atual.getDireita())); // insere na direita
-            if (altura(atual.getDireita()) - altura(atual.getEsquerda()) == 2) // se houver diferença na altura igual a 2
-            {
-                if (elemento.getFluxo() > atual.getDireita().getElemento().getFluxo()) // se novo é menor que direita do atual
-                {
-                    atual = girarFilhoDireita(atual); // faz giro
-                } else {
-                    atual = duploFilhoDireita(atual); // faz giro
-                }
-            }
-        } else
-            ;  // nao faz nada
-        atual.setAltura(maximo(altura(atual.getEsquerda()), altura(atual.getDireita())) + 1); //seta altura do no q foi inserido
-        return atual;
+    public void adicionar(Trafego nElemento) {
+        NoAVL novo = new NoAVL(nElemento);
+        adicionarAVL(this.raiz, novo);
     }
 
-    public boolean estaBalanceada(NoAVL no) { // verifica se a árvore está balanceada
-        NoAVL atual = no;
-        while (atual != null) { // verifica nós da Direita
-            if (altura(atual.getDireita()) - altura(atual.getEsquerda()) == 2) {
-                atual = atual.getDireita();
-                return false;
-            }
-            atual = atual.getDireita();
-        }
-        atual = no;
-        while (atual != null) { // verifica nós da Direita
-            if (altura(atual.getDireita()) - altura(atual.getEsquerda()) == 2) {
-                atual = atual.getEsquerda();
-                return false;
-            }
-            atual = atual.getDireita();
-        }
-        return true;
-    }
+    public void adicionarAVL(NoAVL atual, NoAVL nElemento) {
 
-    public void efetuaBalanceamento(NoAVL no) {    // efetua balançeamento efetuando os giros
-        if (no.getElemento().getFluxo() > no.getDireita().getElemento().getFluxo()) {
-            raiz = girarFilhoDireita(raiz); // giro se dado da raiz maior que dado da direita
+        if (atual == null) {
+            this.raiz = nElemento;
+
         } else {
-            raiz = duploFilhoDireita(raiz); // giro se dado da raiz menor que dado da direita
-        }
-    }
 
-    public boolean remover(double fluxo, NoAVL no) { // método de remoção 
-        NoAVL atual = no;
-        NoAVL anterior = no;
-        boolean eFilhoEsquerda = true;
+            if (nElemento.getElemento().getFluxo() < atual.getElemento().getFluxo()) {
 
-        NoAVL elementoRemover = procurar(fluxo, no);
-        if (elementoRemover != null) {
-            System.out.println("Fluxo " + elementoRemover.getElemento().getFluxo() + " sera removido");
+                if (atual.getEsquerda() == null) {
+                    atual.setEsquerda(nElemento);
+                    nElemento.setPai(atual);
+                    verificaBalanceamento(atual);
 
-            while (atual.getElemento().getFluxo() != fluxo) {
-                anterior = atual;
-                if (fluxo < atual.getElemento().getFluxo()) { // vai pra esquerda?
-                    eFilhoEsquerda = true;
-                    atual = atual.getEsquerda();
-                } else { // ou direita?
-                    eFilhoEsquerda = false;
-                    atual = atual.getDireita();
-                }
-                if (atual == null) {
-                    return false;
-                }
-            }
-            if ((atual.getEsquerda()) == null && (atual.getDireita() == null)) { // se ambos os lados forem nulos
-                if (atual == raiz) // se for raiz árvore é vazia
-                {
-                    raiz = null;
-                } else if (eFilhoEsquerda) // verifica se é filho esquerda ou não
-                {
-                    anterior.setEsquerda(null); // remove
                 } else {
-                    anterior.setDireita(null); // remove
+                    adicionarAVL(atual.getEsquerda(), nElemento);
                 }
-            } else if (atual.getDireita() == null) // se esquerda é nulo
-            {
-                if (atual == raiz) {
-                    raiz = atual.getEsquerda();
-                } else if (eFilhoEsquerda) // verifica  se é filho esquerda
-                {
-                    anterior.setEsquerda(atual.getEsquerda());
+
+            } else if (nElemento.getElemento().getFluxo() > atual.getElemento().getFluxo()) {
+
+                if (atual.getDireita() == null) {
+                    atual.setDireita(nElemento);
+                    nElemento.setPai(atual);
+                    verificaBalanceamento(atual);
+
                 } else {
-                    anterior.setDireita(atual.getEsquerda());
+                    adicionarAVL(atual.getDireita(), nElemento);
                 }
-            } else if (atual.getEsquerda() == null) // se esquerda é nulo
-            {
-                if (atual == raiz) {
-                    raiz = atual.getDireita();
-                } else if (eFilhoEsquerda) // verifica se é filho esquerda
-                {
-                    anterior.setEsquerda(atual.getDireita());
-                } else {
-                    anterior.setDireita(atual.getDireita());
-                }
-            } else { // se nem esquerda nem direita ou ambos forem nulos, entra aqui
-                NoAVL sucessor = getSucessor(atual); // pega o sucessor
-                if (atual == raiz) {
-                    raiz = sucessor;
-                } else if (eFilhoEsquerda) {
-                    anterior.setEsquerda(sucessor);
-                } else {
-                    anterior.setDireita(sucessor);
-                }
-                sucessor.setEsquerda(atual.getEsquerda());
-            }
-            if (estaBalanceada(raiz)) // se estiver balanceada remoção está terminada
-            {
-                return true;
+
             } else {
-                efetuaBalanceamento(raiz); // se não efetua giros para balanceamento
-                return true;
+                // O nó já existe
             }
         }
-        System.out.println("Fluxo não encontrado");
-        return false;
     }
 
-    public NoAVL getSucessor(NoAVL no) {  // pega o sucessor
-        NoAVL sucessorAnterior = no;
-        NoAVL sucessor = no;
-        NoAVL atual = no.getDireita(); // vai para filho da direita
-        while (atual != null) { // enquanto houver
-            sucessorAnterior = sucessor;
-            sucessor = atual.getEsquerda();
+    public void verificaBalanceamento(NoAVL atual) {
+        setBalanceamento(atual);
+        int balanceamento = atual.getAltura();
+
+        if (balanceamento == -2) {
+
+            if (altura(atual.getEsquerda().getEsquerda()) >= altura(atual.getEsquerda().getDireita())) {
+                atual = giroDireita(atual);
+
+            } else {
+                atual = duploGiroEsquerdaDireita(atual);
+            }
+
+        } else if (balanceamento == 2) {
+
+            if (altura(atual.getDireita().getDireita()) >= altura(atual.getDireita().getEsquerda())) {
+                atual = giroEsquerda(atual);
+
+            } else {
+                atual = duploGiroDireitaEsquerda(atual);
+            }
         }
 
-        if (sucessor != no.getDireita()) {
-            sucessorAnterior.setEsquerda(sucessor.getDireita());
-            sucessor.setDireita(no.getDireita());
+        if (atual.getPai() != null) {
+            verificaBalanceamento(atual.getPai());
+        } else {
+            this.raiz = atual;
         }
-        return sucessor;
     }
 
-    public NoAVL procurar(double fluxo, NoAVL t) { // método de procura
+    public void remover(double fluxo) {
+        removerAVL(this.raiz, fluxo);
+    }
+
+    public void removerAVL(NoAVL atual, double fluxo) {
+        if (atual == null) {
+            return;
+
+        } else {
+
+            if (atual.getElemento().getFluxo() > fluxo) {
+                removerAVL(atual.getEsquerda(), fluxo);
+
+            } else if (atual.getElemento().getFluxo() < fluxo) {
+                removerAVL(atual.getDireita(), fluxo);
+
+            } else if (atual.getElemento().getFluxo() == fluxo) {
+                removerNoEncontrado(atual);
+            }
+        }
+    }
+
+    public void removerNoEncontrado(NoAVL aRemover) {
+        NoAVL rem;
+
+        if (aRemover.getEsquerda() == null || aRemover.getDireita() == null) {
+
+            if (aRemover.getPai() == null) {
+                this.raiz = null;
+                aRemover = null;
+                return;
+            }
+            rem = aRemover;
+
+        } else {
+            rem = sucessor(aRemover);
+            aRemover.setElemento(rem.getElemento());
+        }
+
+        NoAVL p;
+        if (rem.getEsquerda() != null) {
+            p = rem.getEsquerda();
+        } else {
+            p = rem.getDireita();
+        }
+
+        if (p != null) {
+            p.setPai(rem.getPai());
+        }
+
+        if (rem.getPai() == null) {
+            this.raiz = p;
+        } else {
+            if (rem == rem.getPai().getEsquerda()) {
+                rem.getPai().setEsquerda(p);
+            } else {
+                rem.getPai().setDireita(p);
+            }
+            verificaBalanceamento(rem.getPai());
+        }
+        rem = null;
+    }
+
+    public NoAVL giroEsquerda(NoAVL inicial) {
+
+        NoAVL direita = inicial.getDireita();
+        direita.setPai(inicial.getPai());
+
+        inicial.setDireita(direita.getEsquerda());
+
+        if (inicial.getDireita() != null) {
+            inicial.getDireita().setPai(inicial);
+        }
+
+        direita.setEsquerda(inicial);
+        inicial.setPai(direita);
+
+        if (direita.getPai() != null) {
+
+            if (direita.getPai().getDireita() == inicial) {
+                direita.getPai().setDireita(direita);
+
+            } else if (direita.getPai().getEsquerda() == inicial) {
+                direita.getPai().setEsquerda(direita);
+            }
+        }
+
+        setBalanceamento(inicial);
+        setBalanceamento(direita);
+
+        return direita;
+    }
+
+    public NoAVL giroDireita(NoAVL inicial) {
+
+        NoAVL esquerda = inicial.getEsquerda();
+        esquerda.setPai(inicial.getPai());
+
+        inicial.setEsquerda(esquerda.getDireita());
+
+        if (inicial.getEsquerda() != null) {
+            inicial.getEsquerda().setPai(inicial);
+        }
+
+        esquerda.setDireita(inicial);
+        inicial.setPai(esquerda);
+
+        if (esquerda.getPai() != null) {
+
+            if (esquerda.getPai().getDireita() == inicial) {
+                esquerda.getPai().setDireita(esquerda);
+
+            } else if (esquerda.getPai().getEsquerda() == inicial) {
+                esquerda.getPai().setEsquerda(esquerda);
+            }
+        }
+
+        setBalanceamento(inicial);
+        setBalanceamento(esquerda);
+
+        return esquerda;
+    }
+
+    public NoAVL duploGiroEsquerdaDireita(NoAVL inicial) {
+        inicial.setEsquerda(giroEsquerda(inicial.getEsquerda()));
+        return giroDireita(inicial);
+    }
+
+    public NoAVL duploGiroDireitaEsquerda(NoAVL inicial) {
+        inicial.setDireita(giroDireita(inicial.getDireita()));
+        return giroEsquerda(inicial);
+    }
+
+    public NoAVL sucessor(NoAVL q) {
+        if (q.getDireita() != null) {
+            NoAVL r = q.getDireita();
+            while (r.getEsquerda() != null) {
+                r = r.getEsquerda();
+            }
+            return r;
+        } else {
+            NoAVL p = q.getPai();
+            while (p != null && q == p.getDireita()) {
+                q = p;
+                p = q.getPai();
+            }
+            return p;
+        }
+    }
+
+    private int altura(NoAVL atual) {
+        if (atual == null) {
+            return -1;
+        }
+
+        if (atual.getEsquerda() == null && atual.getDireita() == null) {
+            return 0;
+
+        } else if (atual.getEsquerda() == null) {
+            return 1 + altura(atual.getDireita());
+
+        } else if (atual.getDireita() == null) {
+            return 1 + altura(atual.getEsquerda());
+
+        } else {
+            return 1 + Math.max(altura(atual.getEsquerda()), altura(atual.getDireita()));
+        }
+    }
+
+    private void setBalanceamento(NoAVL no) {
+        no.setAltura(altura(no.getDireita()) - altura(no.getEsquerda()));
+    }
+
+    public NoAVL procurarFluxo(double fluxo, NoAVL t) {
         while (t != null) {
             if (fluxo < t.getElemento().getFluxo()) {
                 t = t.getEsquerda();
             } else if (fluxo > t.getElemento().getFluxo()) {
                 t = t.getDireita();
             } else {
-                return t; // se achar retorna t
+                return t;
             }
         }
-        return null; // se não achar retorna null
-    }
-
-    public static int altura(NoAVL t) { // retorna a altura
-        return t == null ? -1 : t.getAltura();
-    }
-
-    public static int maximo(int lhs, int rhs) { // retorna maxima
-        return lhs > rhs ? lhs : rhs;
-    }
-
-    public static NoAVL girarFilhoEsquerda(NoAVL k2) { // giro
-        NoAVL k1 = k2.getEsquerda();
-        k2.setEsquerda(k1.getDireita());
-        k1.setDireita(k2);
-        k2.setAltura(maximo(altura(k2.getEsquerda()), altura(k2.getDireita())) + 1);
-        k1.setAltura(maximo(altura(k1.getEsquerda()), k2.getAltura()) + 1);
-        return k1;
-    }
-
-    public static NoAVL girarFilhoDireita(NoAVL k1) { // giro
-        NoAVL k2 = k1.getDireita();
-        k1.setDireita(k2.getEsquerda());
-        k2.setEsquerda(k1);
-        k1.setAltura(maximo(altura(k1.getEsquerda()), altura(k1.getDireita())) + 1);
-        k2.setAltura(maximo(altura(k2.getDireita()), k1.getAltura()) + 1);
-        return k2;
-    }
-
-    public static NoAVL duploFilhoEsquerda(NoAVL k3) {
-        k3.setEsquerda(girarFilhoDireita(k3.getEsquerda()));
-        return girarFilhoEsquerda(k3);
-    }
-
-    public static NoAVL duploFilhoDireita(NoAVL k1) {
-        k1.setDireita(girarFilhoEsquerda(k1.getDireita()));
-        return girarFilhoDireita(k1);
-    }
-
-    void adicionar(Trafego elemento) { // adicionar que chama adicionar com parametro elemento e raiz
-        raiz = adicionar(elemento, raiz);
-    }
-
-    public boolean procurar(double fluxo) { // procurar que chama procurar com parametro elemento e raiz
-        if (procurar(fluxo, raiz) == null) {
-            return false;
-        }
-        return true;
+        return null;
     }
 
     public void imprimirAVL() {

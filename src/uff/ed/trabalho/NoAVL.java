@@ -1,21 +1,30 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package uff.ed.trabalho;
 
 /**
  *
  * @author allyssoncc
  */
-class NoAVL {
+public class NoAVL {
 
     private Trafego elemento;
     private NoAVL esquerda;
     private NoAVL direita;
+    private NoAVL pai;
     private int altura;
 
-    NoAVL(Trafego elemento) {
-        this.elemento = elemento;
-        esquerda = null;
-        direita = null;
-        altura = 0;
+    public NoAVL(Trafego k) {
+        setEsquerda(setDireita(setPai(null)));
+        setAltura(0);
+        setElemento(k);
+    }
+
+    public String toString() {
+        return Double.toString(getElemento().getFluxo());
     }
 
     public Trafego getElemento() {
@@ -26,22 +35,6 @@ class NoAVL {
         this.elemento = elemento;
     }
 
-    public NoAVL getEsquerda() {
-        return esquerda;
-    }
-
-    public void setEsquerda(NoAVL esquerda) {
-        this.esquerda = esquerda;
-    }
-
-    public NoAVL getDireita() {
-        return direita;
-    }
-
-    public void setDireita(NoAVL direita) {
-        this.direita = direita;
-    }
-
     public int getAltura() {
         return altura;
     }
@@ -50,6 +43,32 @@ class NoAVL {
         this.altura = altura;
     }
 
+    public NoAVL getPai() {
+        return pai;
+    }
+
+    public NoAVL setPai(NoAVL pai) {
+        this.pai = pai;
+        return pai;
+    }
+
+    public NoAVL getDireita() {
+        return direita;
+    }
+
+    public NoAVL setDireita(NoAVL direita) {
+        this.direita = direita;
+        return direita;
+    }
+
+    public NoAVL getEsquerda() {
+        return esquerda;
+    }
+
+    public void setEsquerda(NoAVL esquerda) {
+        this.esquerda = esquerda;
+    }
+    
     public void imprimirArvore() {
         if (direita != null) {
             direita.imprimirArvore(false, "");
@@ -61,7 +80,7 @@ class NoAVL {
     }
 
     private void imprimirFluxo() {
-        System.out.print("" + elemento.getFluxo());
+        System.out.print("" + getElemento().getFluxo());
         System.out.print('\n');
     }
 

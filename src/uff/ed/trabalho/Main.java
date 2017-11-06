@@ -68,16 +68,15 @@ public class Main {
                  */
             }
         }
-        
-        System.out.println(arvore.procurar(7));
 
         // imprime a lista toda
         System.out.println("Lista");
         lista.imprimirLista();
         arvore.imprimirAVL();
-        
-        arvore.remover(7, arvore.raiz);
+        System.out.println(arvore.procurarFluxo(12, arvore.raiz));
+        arvore.remover(12);
         arvore.imprimirAVL();
+        System.out.println(arvore.procurarFluxo(12, arvore.raiz));
     }
 
 }
