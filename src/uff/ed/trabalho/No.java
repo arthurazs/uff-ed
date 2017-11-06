@@ -6,7 +6,7 @@ package uff.ed.trabalho;
  */
 public class No {
     
-    private No proximo;
+    private No proximo = null;
     private Trafego elemento;
     
     public No(No proximo, Trafego elemento) {
@@ -14,14 +14,6 @@ public class No {
         this.elemento = elemento;
     }
     
-    public No(Trafego elemento) {
-        this.elemento = elemento;
-    }
-
-    public void setProximo(No proximo) {
-        this.proximo = proximo;
-    }
-
     public No getProximo() {
         return proximo;
     }
@@ -30,7 +22,4 @@ public class No {
         return elemento;
     }
 
-    public void setElemento(Trafego elemento) {
-        this.elemento = elemento;
-    }
 }

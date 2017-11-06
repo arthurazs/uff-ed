@@ -41,7 +41,7 @@ public class Util {
         return DATEFORMAT.parse(data);
     }
     
-    public static int dataToInt(String data) {
+    public static int dataToInt(Date data) {
         return Integer.parseInt(INTFORMAT.format(data));
     }
     

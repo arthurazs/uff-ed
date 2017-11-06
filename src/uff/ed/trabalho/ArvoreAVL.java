@@ -19,43 +19,56 @@ public class ArvoreAVL {
         return raiz == null;
     }
 
-    public void adicionar(Trafego nElemento) {
-        NoAVL novo = new NoAVL(nElemento);
+    public void adicionar(Double fluxo) {
+        NoAVL novo = new NoAVL(fluxo);
         adicionarAVL(this.raiz, novo);
     }
+    
+    public void adicionarElemento(Trafego elemento) {
+        Double fluxo = elemento.getFluxo();
+        adicionarElementoAVL(raiz, elemento);
+    }
+    
+    private void adicionarElementoAVL(NoAVL atual, Trafego elemento) {
+        if(atual == null) {
+            throw new Error("ERROR Fluxo nao adicionado anteriormente");
+        }
+        else if (elemento.getFluxo() == atual.getChave())
+            atual.inserirElemento(elemento);
+        else if (elemento.getFluxo() < atual.getChave())
+            adicionarElementoAVL(atual.getEsquerda(), elemento);
+        else
+            adicionarElementoAVL(atual.getDireita(), elemento);
+    }
 
-    public void adicionarAVL(NoAVL atual, NoAVL nElemento) {
+    private void adicionarAVL(NoAVL atual, NoAVL nElemento) {
 
-        if (atual == null) {
+        if (atual == null)
             this.raiz = nElemento;
+        else if (nElemento.getChave() < atual.getChave()) {
+            if (atual.getEsquerda() == null) {
+                atual.setEsquerda(nElemento);
+                nElemento.setPai(atual);
+                verificaBalanceamento(atual);
 
-        } else {
-
-            if (nElemento.getElemento().getFluxo() < atual.getElemento().getFluxo()) {
-
-                if (atual.getEsquerda() == null) {
-                    atual.setEsquerda(nElemento);
-                    nElemento.setPai(atual);
-                    verificaBalanceamento(atual);
-
-                } else {
-                    adicionarAVL(atual.getEsquerda(), nElemento);
-                }
-
-            } else if (nElemento.getElemento().getFluxo() > atual.getElemento().getFluxo()) {
-
-                if (atual.getDireita() == null) {
-                    atual.setDireita(nElemento);
-                    nElemento.setPai(atual);
-                    verificaBalanceamento(atual);
-
-                } else {
-                    adicionarAVL(atual.getDireita(), nElemento);
-                }
-
-            } else {
-                // O nó já existe
             }
+            else
+                adicionarAVL(atual.getEsquerda(), nElemento);
+
+        }
+        else if (nElemento.getChave() > atual.getChave()) {
+
+            if (atual.getDireita() == null) {
+                atual.setDireita(nElemento);
+                nElemento.setPai(atual);
+                verificaBalanceamento(atual);
+
+            }
+            else
+                adicionarAVL(atual.getDireita(), nElemento);
+        }
+        else {
+            // O nó já existe
         }
     }
 
@@ -63,30 +76,23 @@ public class ArvoreAVL {
         setBalanceamento(atual);
         int balanceamento = atual.getAltura();
 
-        if (balanceamento == -2) {
+        if (balanceamento == -2)
 
-            if (altura(atual.getEsquerda().getEsquerda()) >= altura(atual.getEsquerda().getDireita())) {
+            if (altura(atual.getEsquerda().getEsquerda()) >= altura(atual.getEsquerda().getDireita()))
                 atual = giroDireita(atual);
-
-            } else {
+            else
                 atual = duploGiroEsquerdaDireita(atual);
-            }
+        else if (balanceamento == 2)
 
-        } else if (balanceamento == 2) {
-
-            if (altura(atual.getDireita().getDireita()) >= altura(atual.getDireita().getEsquerda())) {
+            if (altura(atual.getDireita().getDireita()) >= altura(atual.getDireita().getEsquerda()))
                 atual = giroEsquerda(atual);
-
-            } else {
+            else
                 atual = duploGiroDireitaEsquerda(atual);
-            }
-        }
 
-        if (atual.getPai() != null) {
+        if (atual.getPai() != null)
             verificaBalanceamento(atual.getPai());
-        } else {
+        else
             this.raiz = atual;
-        }
     }
 
     public void remover(double fluxo) {
@@ -94,21 +100,14 @@ public class ArvoreAVL {
     }
 
     public void removerAVL(NoAVL atual, double fluxo) {
-        if (atual == null) {
+        if (atual == null)
             return;
-
-        } else {
-
-            if (atual.getElemento().getFluxo() > fluxo) {
-                removerAVL(atual.getEsquerda(), fluxo);
-
-            } else if (atual.getElemento().getFluxo() < fluxo) {
-                removerAVL(atual.getDireita(), fluxo);
-
-            } else if (atual.getElemento().getFluxo() == fluxo) {
-                removerNoEncontrado(atual);
-            }
-        }
+        else if (atual.getChave() > fluxo)
+            removerAVL(atual.getEsquerda(), fluxo);
+        else if (atual.getChave() < fluxo)
+            removerAVL(atual.getDireita(), fluxo);
+        else if (atual.getChave() == fluxo)
+            removerNoEncontrado(atual);
     }
 
     public void removerNoEncontrado(NoAVL aRemover) {
@@ -123,30 +122,28 @@ public class ArvoreAVL {
             }
             rem = aRemover;
 
-        } else {
+        }
+        else {
             rem = sucessor(aRemover);
-            aRemover.setElemento(rem.getElemento());
+            aRemover.setChave(rem.getChave(), rem.getLista());
         }
 
         NoAVL p;
-        if (rem.getEsquerda() != null) {
+        if (rem.getEsquerda() != null)
             p = rem.getEsquerda();
-        } else {
+        else
             p = rem.getDireita();
-        }
 
-        if (p != null) {
+        if (p != null)
             p.setPai(rem.getPai());
-        }
 
-        if (rem.getPai() == null) {
+        if (rem.getPai() == null)
             this.raiz = p;
-        } else {
-            if (rem == rem.getPai().getEsquerda()) {
+        else {
+            if (rem == rem.getPai().getEsquerda())
                 rem.getPai().setEsquerda(p);
-            } else {
+            else
                 rem.getPai().setDireita(p);
-            }
             verificaBalanceamento(rem.getPai());
         }
         rem = null;
@@ -159,22 +156,18 @@ public class ArvoreAVL {
 
         inicial.setDireita(direita.getEsquerda());
 
-        if (inicial.getDireita() != null) {
+        if (inicial.getDireita() != null)
             inicial.getDireita().setPai(inicial);
-        }
 
         direita.setEsquerda(inicial);
         inicial.setPai(direita);
 
-        if (direita.getPai() != null) {
+        if (direita.getPai() != null)
 
-            if (direita.getPai().getDireita() == inicial) {
+            if (direita.getPai().getDireita() == inicial)
                 direita.getPai().setDireita(direita);
-
-            } else if (direita.getPai().getEsquerda() == inicial) {
+            else if (direita.getPai().getEsquerda() == inicial)
                 direita.getPai().setEsquerda(direita);
-            }
-        }
 
         setBalanceamento(inicial);
         setBalanceamento(direita);
@@ -189,22 +182,18 @@ public class ArvoreAVL {
 
         inicial.setEsquerda(esquerda.getDireita());
 
-        if (inicial.getEsquerda() != null) {
+        if (inicial.getEsquerda() != null)
             inicial.getEsquerda().setPai(inicial);
-        }
 
         esquerda.setDireita(inicial);
         inicial.setPai(esquerda);
 
-        if (esquerda.getPai() != null) {
+        if (esquerda.getPai() != null)
 
-            if (esquerda.getPai().getDireita() == inicial) {
+            if (esquerda.getPai().getDireita() == inicial)
                 esquerda.getPai().setDireita(esquerda);
-
-            } else if (esquerda.getPai().getEsquerda() == inicial) {
+            else if (esquerda.getPai().getEsquerda() == inicial)
                 esquerda.getPai().setEsquerda(esquerda);
-            }
-        }
 
         setBalanceamento(inicial);
         setBalanceamento(esquerda);
@@ -225,11 +214,11 @@ public class ArvoreAVL {
     public NoAVL sucessor(NoAVL q) {
         if (q.getDireita() != null) {
             NoAVL r = q.getDireita();
-            while (r.getEsquerda() != null) {
+            while (r.getEsquerda() != null)
                 r = r.getEsquerda();
-            }
             return r;
-        } else {
+        }
+        else {
             NoAVL p = q.getPai();
             while (p != null && q == p.getDireita()) {
                 q = p;
@@ -240,22 +229,17 @@ public class ArvoreAVL {
     }
 
     private int altura(NoAVL atual) {
-        if (atual == null) {
+        if (atual == null)
             return -1;
-        }
 
-        if (atual.getEsquerda() == null && atual.getDireita() == null) {
+        if (atual.getEsquerda() == null && atual.getDireita() == null)
             return 0;
-
-        } else if (atual.getEsquerda() == null) {
+        else if (atual.getEsquerda() == null)
             return 1 + altura(atual.getDireita());
-
-        } else if (atual.getDireita() == null) {
+        else if (atual.getDireita() == null)
             return 1 + altura(atual.getEsquerda());
-
-        } else {
+        else
             return 1 + Math.max(altura(atual.getEsquerda()), altura(atual.getDireita()));
-        }
     }
 
     private void setBalanceamento(NoAVL no) {
@@ -263,19 +247,21 @@ public class ArvoreAVL {
     }
 
     public NoAVL procurarFluxo(double fluxo, NoAVL t) {
-        while (t != null) {
-            if (fluxo < t.getElemento().getFluxo()) {
+        while (t != null)
+            if (fluxo < t.getChave())
                 t = t.getEsquerda();
-            } else if (fluxo > t.getElemento().getFluxo()) {
+            else if (fluxo > t.getChave())
                 t = t.getDireita();
-            } else {
+            else
                 return t;
-            }
-        }
         return null;
     }
 
-    public void imprimirAVL() {
-        raiz.imprimirArvore();
+    public void imprimirAVL(boolean printList) {
+        raiz.imprimir(printList);
+    }
+
+    public void imprimirResposta(Double regra) {
+        raiz.imprimirResposta(regra);
     }
 }

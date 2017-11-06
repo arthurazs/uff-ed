@@ -11,28 +11,40 @@ package uff.ed.trabalho;
  */
 public class NoAVL {
 
-    private Trafego elemento;
+    private ListaDinamica lista;
+    private Double chave;
     private NoAVL esquerda;
     private NoAVL direita;
     private NoAVL pai;
     private int altura;
 
-    public NoAVL(Trafego k) {
-        setEsquerda(setDireita(setPai(null)));
-        setAltura(0);
-        setElemento(k);
+    public NoAVL(Double k) {
+        this.esquerda = this.direita = this.pai = null;
+        this.altura = 0;
+        this.lista = new ListaDinamica();
+        this.chave = k;
     }
 
+    @Override
     public String toString() {
-        return Double.toString(getElemento().getFluxo());
+        return Double.toString(this.chave);
     }
 
-    public Trafego getElemento() {
-        return elemento;
+    public Double getChave() {
+        return chave;
     }
 
-    public void setElemento(Trafego elemento) {
-        this.elemento = elemento;
+    public void inserirElemento(Trafego elemento) {
+        this.lista.adicionar(elemento);
+    }
+
+    public ListaDinamica getLista() {
+        return lista;
+    }
+
+    public void setChave(Double chave, ListaDinamica lista) {
+        this.chave = chave;
+        this.lista = lista;
     }
 
     public int getAltura() {
@@ -68,36 +80,45 @@ public class NoAVL {
     public void setEsquerda(NoAVL esquerda) {
         this.esquerda = esquerda;
     }
-    
-    public void imprimirArvore() {
-        if (direita != null) {
-            direita.imprimirArvore(false, "");
-        }
-        imprimirFluxo();
-        if (esquerda != null) {
-            esquerda.imprimirArvore(true, "");
-        }
+
+    public void imprimir(boolean printList) {
+        if (direita != null)
+            direita.imprimir(printList, false, "");
+        System.out.print(chave + " ");
+        if (printList)
+            lista.imprimirLista();
+        else
+            System.out.println();
+        if (esquerda != null)
+            esquerda.imprimir(printList, true, "");
     }
 
-    private void imprimirFluxo() {
-        System.out.print("" + getElemento().getFluxo());
-        System.out.print('\n');
-    }
-
-    private void imprimirArvore(boolean isRight, String indent) {
-        if (direita != null) {
-            direita.imprimirArvore(false, indent + (isRight ? " |      " : "        "));
-        }
+    private void imprimir(boolean printList, boolean isRight, String indent) {
+        if (direita != null)
+            direita.imprimir(printList, false, indent + (isRight ? " |      " : "        "));
         System.out.print(indent);
-        if (isRight) {
+        if (isRight)
             System.out.print(" \\");
-        } else {
+        else
             System.out.print(" /");
-        }
         System.out.print("----- ");
-        imprimirFluxo();
-        if (esquerda != null) {
-            esquerda.imprimirArvore(true, indent + (isRight ? "        " : " |      "));
-        }
+        System.out.print(chave + " ");
+        if (printList)
+            lista.imprimirLista();
+        else
+            System.out.println();
+        if (esquerda != null)
+            esquerda.imprimir(printList, true, indent + (isRight ? "        " : " |      "));
+    }
+
+    public void imprimirResposta(Double regra) {
+        if (chave > regra)
+            lista.imprimirListaLn();
+
+        if (esquerda != null && esquerda.getChave() > regra)
+            esquerda.imprimirResposta(regra);
+        else if (direita != null && direita.getChave() > regra)
+            direita.imprimirResposta(regra);
+
     }
 }

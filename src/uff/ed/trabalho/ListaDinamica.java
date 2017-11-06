@@ -7,22 +7,16 @@ package uff.ed.trabalho;
 public class ListaDinamica {
 
     private No primeiro = null;
-    private No ultimo = null;
+    private int tamanho = 0;
 
-    public No getPrimeiro() {
-        return primeiro;
-    }
-
-    public void setPrimeiro(No primeiro) {
-        this.primeiro = primeiro;
-    }
-
-    public No getUltimo() {
-        return ultimo;
-    }
-
-    public void setUltimo(No ultimo) {
-        this.ultimo = ultimo;
+    public Trafego buscar(int chave) {
+        No no = primeiro;
+        while (no != null) {
+            if (no.getElemento().getChave() == chave)
+                return no.getElemento();
+            no = no.getProximo();
+        }
+        return null;
     }
 
     public int tamanho() {
@@ -40,134 +34,69 @@ public class ListaDinamica {
         return (tamanho() == 0);
     }
 
-    public void adicionarNoFinal(Trafego elemento) {
-        if (estaVazia()) {
-            adicionarNoInicio(elemento);
-        } else {
-            No novo = new No(elemento);
-            ultimo.setProximo(novo);
-            ultimo = novo;
-        }
+    public void referenciar(Trafego elemento) {
+        referenciarProximo(primeiro, elemento);
     }
 
-    public void adicionarNoInicio(Trafego elemento) {
-        No novo = new No(primeiro, elemento);
-        primeiro = novo;
-
-        if (tamanho() == 1) {
-            ultimo = primeiro;
-        }
-    }
-
-    public void adicionarNaPosicao(int pos, Trafego obj) {
-        if (pos >= tamanho()) {
-            adicionarNoInicio(obj);
-        } else if (pos == 0) {
-            No novo = new No(obj);
-            novo.setProximo(primeiro);
-            primeiro = novo;
-        } else {
-            int i = 1;
-            No aux = primeiro;
-            while (i < pos) {
-                aux = aux.getProximo();
-                i++;
+    public void referenciarProximo(No no, Trafego elemento) {
+        if (no != null)
+            if (!no.getElemento().equals(elemento))
+                adicionarProximo(no.getProximo(), elemento);
+            else {
+                primeiro = new No(primeiro, elemento);
+                tamanho++;
             }
-            No novo = new No(obj);
-            novo.setProximo(aux.getProximo());
-            aux.setProximo(novo);
-        }
     }
 
-    public void removerDoInicio() {
-        if (estaVazia()) {
-            System.out.println("Error: Lista vazia!");
-        } else if (tamanho() > 1) {
-            primeiro = primeiro.getProximo();
-        } else {
-            primeiro = ultimo = null;
-        }
+    public void adicionar(Trafego elemento) {
+        adicionarProximo(primeiro, elemento);
     }
 
-    public void removerDoFinal() {
-        No aux = primeiro;
-
-        if (estaVazia()) {
-            System.out.println("Error: Lista vazia!");
-        } else if (tamanho() == 1) {
-            removerDoInicio();
-        } else {
-            while (aux.getProximo().getProximo() != null) {
-                aux = aux.getProximo();
+    public void adicionarProximo(No no, Trafego elemento) {
+        if (no != null)
+            if (no.getElemento().equals(elemento)) {
+                // se já existe, totaliza
+                Double fluxo = no.getElemento().getFluxo() + elemento.getFluxo();
+                no.getElemento().setFluxo(fluxo);
             }
-        }
-        aux.setProximo(null);
-        ultimo = aux;
-    }
-
-    public void removerDaPosicao(int pos) {
-        No aux = null;
-        if (pos >= 0 && pos < tamanho()) {
-            if (pos == 0) {
-                aux = primeiro;
-                primeiro = primeiro.getProximo();
-                if (primeiro == null) {
-                    ultimo = null;
-                }
-            } else {
-                int i = 1;
-                No x = primeiro;
-                while (i < pos) {
-                    x = x.getProximo();
-                    i++;
-                }
-                aux = x.getProximo();
-                x.setProximo(aux.getProximo());
-                if (aux == ultimo) {
-                    ultimo = x;
-                }
-            }
-            aux.setProximo(null);
+            else
+                adicionarProximo(no.getProximo(), elemento);
+        else {
+            primeiro = new No(primeiro, elemento);
+            tamanho++;
         }
     }
 
-    public boolean pesquisar(Trafego elemento) {
+    public Trafego[] estatica() {
+        Trafego[] lista = new Trafego[tamanho];
+        int cont = 0;
+        No no = primeiro;
+        while (no != null) {
+            lista[cont++] = no.getElemento();
+            no = no.getProximo();
+        }
+        return lista;
+    }
+
+    public void imprimirListaLn() {
+        if (estaVazia())
+            System.out.println("Lista vazia!");
         No aux = primeiro;
         for (int i = 1; i <= tamanho(); i++) {
-            if (aux.getElemento() == elemento) {
-                return true;
-            }
+            System.out.println(aux.getElemento());
             aux = aux.getProximo();
         }
-        return false;
-    }
-
-    public Trafego buscar(int pos) {
-        if (pos >= 0 && pos < tamanho()) {
-            int i = 0;
-            No aux = primeiro;
-            while (i < pos) {
-                i++;
-                aux = aux.getProximo();
-            }
-            return aux.getElemento();
-        }
-        return null;
     }
 
     public void imprimirLista() {
-        if (estaVazia()) {
+        if (estaVazia())
             System.out.println("Lista vazia!");
-        }
         No aux = primeiro;
         for (int i = 1; i <= tamanho(); i++) {
-            System.out.print("[" + aux.getElemento().getSetor() + ", ");
-            System.out.print(aux.getElemento().getRodovia() + ", ");
-            System.out.print(aux.getElemento().getDia() + ", ");
-            System.out.print(aux.getElemento().getFluxo() + "]");
-            System.out.println("");
+            System.out.print(aux.getElemento() + " ");
             aux = aux.getProximo();
         }
+        System.out.println();
     }
 
 }

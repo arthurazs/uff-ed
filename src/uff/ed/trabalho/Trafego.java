@@ -14,39 +14,25 @@ import java.util.Date;
 public class Trafego {
 
     private String setor;
-    private String rodovia;
     private Date dia;
     private double fluxo;
 
-    public Trafego(String setor, String rodovia, Date dia, double fluxo) {
+    public Trafego(String setor, Date dia, double fluxo) {
         this.setor = setor;
-        this.rodovia = rodovia;
         this.dia = dia;
         this.fluxo = fluxo;
+    }
+    
+    public int getChave() {
+        return Util.stringToInt(this.setor) + Util.dataToInt(this.dia);
     }
 
     public String getSetor() {
         return setor;
     }
 
-    public void setSetor(String setor) {
-        this.setor = setor;
-    }
-
-    public String getRodovia() {
-        return rodovia;
-    }
-
-    public void setRodovia(String rodovia) {
-        this.rodovia = rodovia;
-    }
-
     public String getDia() {
         return Util.formatData(dia);
-    }
-
-    public void setDia(Date dia) {
-        this.dia = dia;
     }
 
     public double getFluxo() {
@@ -57,8 +43,13 @@ public class Trafego {
         this.fluxo = fluxo;
     }
 
-    public String getContent() {
-        return "[" + getSetor() + ", " + getRodovia() + ", " + getDia() + ", " + getFluxo() + "]";
+    @Override
+    public String toString() {
+        return "[" + getSetor() + ", " + getDia() + ", " + getFluxo() + "]";
+    }
+
+    public boolean equals(Trafego trafego) {
+        return this.getChave() == trafego.getChave();
     }
 
 }
