@@ -117,8 +117,19 @@ public class NoAVL {
 
         if (esquerda != null && esquerda.getChave() > regra)
             esquerda.imprimirResposta(regra);
-        else if (direita != null && direita.getChave() > regra)
+        if (direita != null && direita.getChave() > regra)
             direita.imprimirResposta(regra);
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+

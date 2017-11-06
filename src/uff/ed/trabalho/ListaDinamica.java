@@ -19,6 +19,16 @@ public class ListaDinamica {
         return null;
     }
 
+    public boolean pesquisar(int chave) {
+        No aux = primeiro;
+        while (aux != null) {
+            if (aux.getElemento().getChave() == chave)
+                return true;
+            aux = aux.getProximo();
+        }
+        return false;
+    }
+
     public int tamanho() {
         No aux = primeiro;
         int total = 0;
@@ -38,14 +48,19 @@ public class ListaDinamica {
         referenciarProximo(primeiro, elemento);
     }
 
+    public void copiarPrimeiro(Trafego elemento) {
+        referenciar(elemento);
+    }
+
     public void referenciarProximo(No no, Trafego elemento) {
-        if (no != null)
+        if (no != null) {
             if (!no.getElemento().equals(elemento))
-                adicionarProximo(no.getProximo(), elemento);
-            else {
-                primeiro = new No(primeiro, elemento);
-                tamanho++;
-            }
+                referenciarProximo(no.getProximo(), elemento);
+        }
+        else {
+            primeiro = new No(primeiro, elemento);
+            tamanho++;
+        }
     }
 
     public void adicionar(Trafego elemento) {

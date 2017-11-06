@@ -22,6 +22,10 @@ public class Trafego {
         this.dia = dia;
         this.fluxo = fluxo;
     }
+
+    public Trafego copia() {
+        return new Trafego(setor, dia, fluxo);
+    }
     
     public int getChave() {
         return Util.stringToInt(this.setor) + Util.dataToInt(this.dia);

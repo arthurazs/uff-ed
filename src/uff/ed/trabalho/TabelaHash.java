@@ -5,6 +5,8 @@
  */
 package uff.ed.trabalho;
 
+import java.util.Objects;
+
 /**
  *
  * @author Arthur Zopellaro
@@ -29,36 +31,22 @@ public class TabelaHash {
         return chave % tamanho;
     }
 
-    public boolean inserirAntigo(int chave, double valor) {
-
-        int posicao = hash(chave); // hash do setor + dia
-        if (contador == 0)
-            max = valor;
-
-        // se colidir, soma o fluxo total
-        if (tabela[posicao] != null)
-            tabela[posicao] += valor;
-        else {
-            contador++;
-            tabela[posicao] = valor;
-        }
-
-        Double aux = tabela[posicao];
-        if (aux > max)
-            max = aux;
-
-        return true;
-    }
-
     public boolean inserir(int chave, double valor) {
 
         int posicao = hash(chave); // hash do setor + dia
         if (contador == 0)
-            max = valor;
+            min = max = valor;
 
-        // se colidir, soma o fluxo total
-        if (tabela[posicao] == null)
+        if (tabela[posicao] == null){
             contador++;
+        }
+        else {
+            // se colidir, significa que um fluxo foi alterado
+            // portanto é importante resetar o mínimo
+            if (Objects.equals(min, tabela[posicao])) {
+                min = max;
+            }
+        }
         tabela[posicao] = valor;
 
         Double aux = tabela[posicao];
