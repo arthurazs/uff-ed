@@ -19,7 +19,7 @@ public class Main {
     private static final String FILE1 = "data_13_05.csv";
     private static final String FILE2 = "data_13_05_2.csv";
 
-    private static final ListaDinamica lista = new ListaDinamica();
+    private static final ListaEstatica lista = new ListaEstatica(Util.TAM);
     private static final ArvoreAVL arvore = new ArvoreAVL();
     private static final TabelaHash hash = new TabelaHash(1009);
 
@@ -30,7 +30,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         readFile(FILE1, false);
-        readFile(FILE2, true);
+        readFile(FILE2, false);
     }
 
     private static void readFile(String filename, boolean verbose) throws Exception {
@@ -77,9 +77,8 @@ public class Main {
 
         if (verbose)
             System.out.println("Populando o hash de fluxos.");
-        Trafego[] novos = lista.estatica();
-        for (Trafego novo : novos)
-            hash.inserir(novo.getChave(), novo.getFluxo());
+        for (int i = 0; i < lista.tamanho(); i++)
+            hash.inserir(lista.obter(i).getChave(), lista.obter(i).getFluxo());
 
         hash.findMin();
 
@@ -88,11 +87,13 @@ public class Main {
         Double[] fluxos = hash.getValues();
         for (Double fluxo : fluxos)
             arvore.adicionar(fluxo);
-
+//        for (int i = 0; i < lista.tamanho(); i++){
+//            arvore.adicionar(lista.obter(i).getFluxo());}
+        
         if (verbose)
             System.out.println("Inserindo elementos nos fluxos da arvore.");
-        for (Trafego novo : novos)
-            arvore.adicionarElemento(novo);
+        for (int i = 0; i < lista.tamanho(); i++)
+            arvore.adicionarElemento(lista.obter(i));
 
     }
 
@@ -101,9 +102,7 @@ public class Main {
         if (verbose)
             System.out.println("Atualizando dados na lista encadeada.");
         String[] line;
-        //TODO 1 Tentar utilizar tabelahash no lugar dessas duas listas
-        ListaDinamica listaAlterados = new ListaDinamica(); // Guarda os que foram alterados
-        ListaDinamica listaFluxoAntigo = new ListaDinamica();
+        ListaEstatica listaAlterados = new ListaEstatica(Util.TAM); // Guarda os que foram alterados
         while ((line = reader.readNext()) != null)
             if (line != null) {
                 // cria elemento do tipo trafego
@@ -113,21 +112,26 @@ public class Main {
                 Trafego elemento = new Trafego(setor, dia, fluxo);
 
                 // adiciona o elemento na lista encadeada e na tabela hash
-                Double aux1 = hash.buscar(elemento.getChave()); //verifica se existe na lista
-                Trafego aux2 = listaAlterados.buscar(elemento.getChave()); //verifica se é uma atualização
-                if (aux1 != null && aux2 == null){
-                    listaFluxoAntigo.copiarPrimeiro(elemento);
+                Trafego antigo = lista.buscar(elemento.getChave());
+                if (antigo != null){
+                    listaAlterados.referenciar(antigo);
+                    lista.adicionar(elemento);
                 }
-                lista.adicionar(elemento);
-                listaAlterados.referenciar(lista.buscar(elemento.getChave()));
+                else{
+                    lista.adicionar(elemento);
+                    Trafego novo = lista.buscar(elemento.getChave());
+                    listaAlterados.referenciar(novo);
+                }
 
             }
 
         if (verbose)
             System.out.println("Atualizando o hash de fluxos.");
-        Trafego[] novos = listaAlterados.estatica();
-        for (Trafego novo : novos)
-            hash.inserir(novo.getChave(), novo.getFluxo());
+        for (int i = 0; i < listaAlterados.tamanho(); i++) {
+            int chave = listaAlterados.obter(i).getChave();
+            Trafego aux = lista.buscar(chave);
+            hash.inserir(chave, aux.getFluxo());
+        }
 
         hash.findMin();
 
@@ -137,37 +141,18 @@ public class Main {
         for (Double fluxo : fluxos)
             arvore.adicionar(fluxo);
 
-        //TODO 2
-        /* FALTA A REMOÇÃO AQUI
-        A forma que imaginei para fazer:
-        pega a lista listaFluxoAntigo, cria uma nova funcao na AVL para remover
-        ELEMENTO (e nao fluxo). Após remover, verifica se a lista (da avl) ficou
-        vazia. Se estiver vazia: remove o NÓ (fluxo) da arvore.
-        
-        Após isso, vem o for abaixo que vai adicionar os que foram removidos.
-        
-        Nota: já funciona sem a remoção, pois aquela regra "𝑚𝑖𝑛(𝑓𝑙𝑢𝑥𝑜) + 0.8delta"
-        sempre vai aumentar, fazendo com que os elementos "desatualizados" nao
-        sejam mais lidos, pois terao fluxo inferior a regra.
-        Esta errado pois: ainda estao na arvore e talvez ela nao fique balanceada
-                          de forma ideal.
-        Esta certo pois: nao sera mais impresso.
-        Pra mim: vamos tentar fazer a remoção. se nao der certo, paciencia.
-        
-        //TODO 3
-        Deveriamos modificar as listas dinamicas para listas estaticas pois
-        precisamos usar FOR nelas. Ta muito gambiarra do jeito que tá, pois
-        estou transformando a lista dinamica em estatica para poder iterar.
-        
-        */
+        for (int i = 0; i < listaAlterados.tamanho(); i++) {
+            Trafego elemento = listaAlterados.obter(i);
+            arvore.removerElemento(elemento);
+        }
         
         if (verbose)
             System.out.println("Atualizando os elementos nos fluxos da arvore.");
-        for (Trafego novo : novos)
-            arvore.adicionarElemento(novo);
-        
-//        arvore.imprimirAVL(false);
-
+        for (int i = 0; i < listaAlterados.tamanho(); i++) {
+            int chave = listaAlterados.obter(i).getChave();
+            Trafego aux = lista.buscar(chave);
+            arvore.adicionarElemento(aux);
+        }
     }
 
 }

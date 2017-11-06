@@ -11,7 +11,7 @@ package uff.ed.trabalho;
  */
 public class NoAVL {
 
-    private ListaDinamica lista;
+    private ListaEstatica lista;
     private Double chave;
     private NoAVL esquerda;
     private NoAVL direita;
@@ -21,7 +21,7 @@ public class NoAVL {
     public NoAVL(Double k) {
         this.esquerda = this.direita = this.pai = null;
         this.altura = 0;
-        this.lista = new ListaDinamica();
+        this.lista = new ListaEstatica(Util.TAM);
         this.chave = k;
     }
 
@@ -38,11 +38,11 @@ public class NoAVL {
         this.lista.adicionar(elemento);
     }
 
-    public ListaDinamica getLista() {
+    public ListaEstatica getLista() {
         return lista;
     }
 
-    public void setChave(Double chave, ListaDinamica lista) {
+    public void setChave(Double chave, ListaEstatica lista) {
         this.chave = chave;
         this.lista = lista;
     }
@@ -115,21 +115,11 @@ public class NoAVL {
         if (chave > regra)
             lista.imprimirListaLn();
 
-        if (esquerda != null && esquerda.getChave() > regra)
+        if (esquerda != null && esquerda.getChave() > regra) {
             esquerda.imprimirResposta(regra);
-        if (direita != null && direita.getChave() > regra)
-            direita.imprimirResposta(regra);
+        }
+        if (direita != null && direita.getChave() > regra) {
+            direita.imprimirResposta(regra);}
 
     }
 }
-
-
-
-
-
-
-
-
-
-
-

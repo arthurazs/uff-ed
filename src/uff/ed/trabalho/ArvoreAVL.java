@@ -23,18 +23,18 @@ public class ArvoreAVL {
         NoAVL novo = new NoAVL(fluxo);
         adicionarAVL(this.raiz, novo);
     }
-    
+
     public void adicionarElemento(Trafego elemento) {
         Double fluxo = elemento.getFluxo();
         adicionarElementoAVL(raiz, elemento);
     }
-    
+
     private void adicionarElementoAVL(NoAVL atual, Trafego elemento) {
-        if(atual == null) {
+        if (atual == null)
             throw new Error("ERROR Fluxo nao adicionado anteriormente");
-        }
-        else if (elemento.getFluxo() == atual.getChave())
+        else if (elemento.getFluxo() == atual.getChave()) {
             atual.inserirElemento(elemento);
+        }
         else if (elemento.getFluxo() < atual.getChave())
             adicionarElementoAVL(atual.getEsquerda(), elemento);
         else
@@ -50,24 +50,20 @@ public class ArvoreAVL {
                 atual.setEsquerda(nElemento);
                 nElemento.setPai(atual);
                 verificaBalanceamento(atual);
-
-            }
-            else
+            } else {
                 adicionarAVL(atual.getEsquerda(), nElemento);
-
-        }
-        else if (nElemento.getChave() > atual.getChave()) {
+            }
+        } else if (nElemento.getChave() > atual.getChave()) {
 
             if (atual.getDireita() == null) {
                 atual.setDireita(nElemento);
                 nElemento.setPai(atual);
                 verificaBalanceamento(atual);
 
-            }
-            else
+            } else {
                 adicionarAVL(atual.getDireita(), nElemento);
-        }
-        else {
+            }
+        } else {
             // O nó já existe
         }
     }
@@ -95,6 +91,32 @@ public class ArvoreAVL {
             this.raiz = atual;
     }
 
+    public void removerElemento(Trafego elemento) {
+        removerElementoAVL(this.raiz, elemento);
+    }
+
+    private void removerElementoAVL(NoAVL atual, Trafego elemento) {
+        if (atual != null) {
+            Double fluxo = elemento.getFluxo();
+            if (atual.getChave() > fluxo)
+                removerElementoAVL(atual.getEsquerda(), elemento);
+            else if (atual.getChave() < fluxo)
+                removerElementoAVL(atual.getDireita(), elemento);
+            else
+                removerElementoEncontrado(atual, elemento);
+        }
+    }
+
+    private void removerElementoEncontrado(NoAVL aRemover, Trafego elemento) {
+        ListaEstatica aux = aRemover.getLista();
+        if (!aux.estaVazia()){
+            aux.remover(elemento.getChave());
+            if (aux.estaVazia())
+                removerNoEncontrado(aRemover);
+        }
+
+    }
+
     public void remover(double fluxo) {
         removerAVL(this.raiz, fluxo);
     }
@@ -110,7 +132,7 @@ public class ArvoreAVL {
             removerNoEncontrado(atual);
     }
 
-    public void removerNoEncontrado(NoAVL aRemover) {
+    private void removerNoEncontrado(NoAVL aRemover) {
         NoAVL rem;
 
         if (aRemover.getEsquerda() == null || aRemover.getDireita() == null) {

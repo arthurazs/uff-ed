@@ -48,5 +48,7 @@ public class Util {
     public static int stringToInt(String elemento) {
         return Integer.parseInt(elemento);
     }
+    
+    public static final int TAM = 10000000;
 
 }
