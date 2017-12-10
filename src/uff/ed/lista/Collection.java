@@ -5,19 +5,19 @@
  */
 package uff.ed.lista;
 
-import uff.ed.Student;
+import uff.ed.Element;
 
 /**
  *
  * @author Arthur Zopellaro
  */
-public interface StudentCollection {
+public interface Collection {
 
-    public boolean insert(Student student);
+    public boolean insert(Element element);
 
-    public Student search(int cpf);
+    public Element search(int id);
 
-    public Student remove(int cpf);
+    public Element remove(int id);
 
     public void print();
 

@@ -5,67 +5,62 @@
  */
 package uff.ed.lista.linear.linked;
 
-import uff.ed.Student;
-import uff.ed.lista.StudentQueue;
+import uff.ed.Element;
+import uff.ed.lista.Queue;
 
 /**
  *
  * @author Arthur Zopellaro
  */
-public class Queue implements StudentQueue {
+public class LinkedQueue implements Queue {
 
-    private StudentNode head;
-    private StudentNode tail;
+    private Node head;
+    private Node tail;
     private int size;
 
-    public Queue() {
-        head = null;
-        tail = null;
+    public LinkedQueue() {
+        head = tail = null;
         size = 0;
     }
 
     @Override
-    public boolean add(Student student) {
-        StudentNode node = new StudentNode(student);
-        if (size == 0) {
-            tail = head = node;
-        }
-        else{
+    public boolean enqueue(Element element) {
+        Node node = new Node(element);
+        if (size == 0)
+            head = node;
+        else
             tail.setNext(node);
-            tail = node;
-        }
+        tail = node;
         size++;
         return true;
     }
 
 
     @Override
-    public boolean pop() {
-        if (size  == 1){
-            tail = head = null;
-            size--;
-        }
-        else if (size > 1){
+    public boolean dequeue() {
+        if (size > 0){
             head = head.getNext();
             size--;
+            return true;
         }
-        else
-            return false;
-        return true;
+        return false;
     }
 
     @Override
-    public void print() {
-        System.out.println("\nPrinting queue");
-        StudentNode node = head;
-        Student student;
-        int count = 0;
-        while (node != null) {
-            student = node.getStudent();
-            System.out.println("#" + count + " " + student.getContent());
-            count++;
-            node = node.getNext();
+    public String toString() {
+        Node node = head;
+        Element element;
+        String result = "|";
+        if (size > 0) {
+            while (node != null) {
+                element = node.getElement();
+                result += " " + element.getContent() + ",";
+                node = node.getNext();
+            }
+            result = result.substring(0, result.length() - 1);
         }
+        result = result + " |";
+        return result;
     }
 
     @Override

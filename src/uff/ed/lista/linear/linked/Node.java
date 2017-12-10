@@ -5,31 +5,31 @@
  */
 package uff.ed.lista.linear.linked;
 
-import uff.ed.Student;
+import uff.ed.Element;
 
 /**
  *
  * @author Arthur Zopellaro
  */
-public class StudentNode {
+public class Node {
 
-    private final Student student;
-    private StudentNode next;
+    private final Element element;
+    private Node next;
 
-    public StudentNode(Student student) {
-        this.student = student;
+    public Node(Element element) {
+        this.element = element;
         this.next = null;
     }
 
-    public Student getStudent() {
-        return student;
+    public Element getElement() {
+        return element;
     }
 
-    public StudentNode getNext() {
+    public Node getNext() {
         return next;
     }
 
-    public void setNext(StudentNode next) {
+    public void setNext(Node next) {
         this.next = next;
     }
 

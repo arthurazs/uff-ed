@@ -5,22 +5,25 @@
  */
 package uff.ed.lista.linear.array;
 
-import uff.ed.lista.linear.linked.*;
-import uff.ed.Student;
-import uff.ed.lista.StudentQueue;
+import uff.ed.Element;
+import uff.ed.lista.Queue;
 
 /**
  *
  * @author Arthur Zopellaro
  */
-public class Queue implements StudentQueue {
+public class ArrayQueue implements Queue {
 
-    private Student lista[];
+    private final Element array[];
     private int size;
+    private int head;
+    private int tail;
+    private final int capacity;
 
-    public Queue(int size) {
-        lista = new Student[size];
-        this.size = 0;
+    public ArrayQueue(int capacity) {
+        array = new Element[capacity];
+        this.capacity = capacity;
+        this.size = this.head = this.tail = 0;
     }
 
     @Override
@@ -29,9 +32,11 @@ public class Queue implements StudentQueue {
     }
 
     @Override
-    public boolean add(Student student) {
-        if (size < lista.length) {
-            lista[size++] = student;
+    public boolean enqueue(Element element) {
+        if (size < capacity) {
+            array[tail] = element;
+            tail = (tail + 1) % capacity;
+            size++;
             return true;
         }
         return false;
@@ -39,10 +44,9 @@ public class Queue implements StudentQueue {
     }
 
     @Override
-    public boolean pop() {
+    public boolean dequeue() {
         if (size > 0) {
-            for (int i = 0; i < size - 1; i++)
-                lista[i] = lista[i + 1];
+            head = (head + 1) % capacity;
             size--;
             return true;
         }
@@ -50,13 +54,23 @@ public class Queue implements StudentQueue {
     }
 
     @Override
-    public void print() {
-        System.out.println("\nPrinting queue");
-        Student student;
-        for (int i = 0; i < size; i++) {
-            student = lista[i];
-            System.out.println("#" + i + " " + student.getContent());
+    public String toString() {
+        Element element;
+        String result = "|";
+        
+        System.out.println("");
+        System.out.println("");
+        
+        if (size > 0) {
+            for (int i = head; i < head + size; i++) {
+                int position = i % capacity;
+                element = array[position];
+                result += " " + element.getContent() + ",";
+            }
+            result = result.substring(0, result.length() - 1);
         }
+        result = result + " |";
+        return result;
     }
 
 }

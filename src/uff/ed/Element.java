@@ -9,22 +9,22 @@ package uff.ed;
  *
  * @author Arthur Zopellaro
  */
-public class Student {
+public class Element {
 
-    private String name;
-    private int cpf;
+    private final String name;
+    private final int id;
 
-    public Student(int cpf, String name) {
+    public Element(int id, String name) {
         this.name = name;
-        this.cpf = cpf;
+        this.id = id;
     }
 
     public String getContent() {
-        return name + " (" + cpf + ")";
+        return name + " (" + id + ")";
     }
 
-    public int getCpf() {
-        return cpf;
+    public int getId() {
+        return id;
     }
 
 }

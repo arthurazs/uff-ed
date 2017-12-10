@@ -5,19 +5,20 @@
  */
 package uff.ed.lista;
 
-import uff.ed.Student;
+import uff.ed.Element;
 
 /**
  *
  * @author Arthur Zopellaro
  */
-public interface StudentQueue {
+public interface Queue {
 
-    public boolean add(Student student);
+    public boolean enqueue(Element element);
 
-    public boolean pop();
+    public boolean dequeue();
 
-    public void print();
+    @Override
+    public String toString();
 
     public int size();
 
